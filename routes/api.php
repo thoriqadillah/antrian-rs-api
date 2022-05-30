@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PoliController;
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +21,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/getPoli', [PoliController::class, 'getPoli']);
-Route::post('/insertAntrian', [AntrianController::class, 'insertAntrian']);
+// Auth
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/refresh', [AuthController::class, 'refresh']);
+
+// Poli
+Route::get('/get-poli', [PoliController::class, 'getPoli']);
+
+// Antrian
+Route::post('/insert-antrian', [AntrianController::class, 'insertAntrian']);

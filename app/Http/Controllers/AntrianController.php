@@ -13,12 +13,16 @@ use Illuminate\Support\Facades\Validator;
 
 class AntrianController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function insertAntrian(Request $request)
     {
         //set validation
         $validator = Validator::make($request->all(), [
             'poli_id'   => 'required',
-            'user_id' => 'required',
             'nama' => 'required',
             'tanggal' => 'required',
         ]);
@@ -31,7 +35,7 @@ class AntrianController extends Controller
         try {
             $antrian = new Antrian;
             $antrian->poli_id = $request->poli_id;
-            $antrian->user_id = $request->user_id;
+            $antrian->user_id = Auth::id();
             $antrian->nama = $request->nama;
             $tanggal = explode("-", $request->tanggal);
             $tempTanggal = $tanggal[2] . '-' . $tanggal[1] . '-' . $tanggal[0];
