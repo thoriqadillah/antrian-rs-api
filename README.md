@@ -7,10 +7,12 @@ Nama Anggota :
 
 ## Clone Repo :
 ```
-git clone https://github.com/thoriqadillah/antrian-rs.git
+git clone https://github.com/thoriqadillah/antrian-rs-api.git
 cd antrian-rs
+composer update
 composer install
 php artisan key:generate
+php artisan jwt:secret
 git pull origin main
 ```
 Kemudian copy .env ke folder project, dan sesuaikan config db nya dengan db kalian
