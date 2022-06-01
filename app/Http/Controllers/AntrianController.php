@@ -13,13 +13,11 @@ use Illuminate\Support\Facades\Validator;
 
 class AntrianController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
-
     public function insertAntrian(Request $request)
     {
+        // Check if user or not
+        $this->middleware('auth:api');
+
         //set validation
         $validator = Validator::make($request->all(), [
             'poli_id'   => 'required',
