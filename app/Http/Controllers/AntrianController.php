@@ -65,6 +65,7 @@ class AntrianController extends Controller
     }
 
     public function next(Request $request) {
+    try {
         $date = Carbon::now()->toDateTimeString();
         $now = substr($date, 0, 10);
 
@@ -88,5 +89,13 @@ class AntrianController extends Controller
             'message' => 'Data Berubah',
             'data' => $nomor->nomor,
         ], 200);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Antrian Habis',
+        ], 409);
+    }
+        
     }
 }
