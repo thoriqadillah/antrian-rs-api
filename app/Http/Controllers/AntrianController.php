@@ -63,4 +63,30 @@ class AntrianController extends Controller
         }
 
     }
+
+    public function next(Request $request) {
+        $date = Carbon::now()->toDateTimeString();
+        $now = substr($date, 0, 10);
+
+        $loket = Antrian::select()
+            ->where('tanggal', $now)
+            ->where('status', 0)
+            ->where('poli_id', $request->poli_id)
+            ->first();
+
+        $loket->status = 1;
+        $loket->save();
+
+        $nomor = Antrian::select('nomor')
+        ->where('tanggal', $now)
+        ->where('status', 0)
+        ->where('poli_id', $request->poli_id)
+        ->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berubah',
+            'data' => $nomor->nomor,
+        ], 200);
+    }
 }

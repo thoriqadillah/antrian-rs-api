@@ -32,3 +32,4 @@ Route::get('/get-poli', [PoliController::class, 'getPoli']);
 
 // Antrian
 Route::post('/insert-antrian', [AntrianController::class, 'insertAntrian']);
+Route::put('/next', [AntrianController::class, 'next'])->name('next_pasien');
