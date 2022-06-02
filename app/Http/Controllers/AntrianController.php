@@ -13,6 +13,51 @@ use Illuminate\Support\Facades\Validator;
 
 class AntrianController extends Controller
 {
+    public function getAntrian(Request $request) {
+        $jumlahPolis = Poli::count();
+        for($i = 1; $i <= $jumlahPolis; $i++)
+        {
+            $nomor[] = Antrian::select('nomor')
+            ->where('tanggal', Carbon::now()->format('Y-m-d'))
+            ->where('status', 0)
+            ->where('poli_id', $i)
+            ->orderBy('nomor', 'asc')
+            ->first();
+        }
+        $data['polis'] = Poli::select('nama_poli')->get();
+        $data['nomor'] = $nomor;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil Get Data',
+            'data'    => $data
+        ], 200);
+    }
+
+    public function getAntrianUser(Request $request) {
+        // Check if user or not
+        $this->middleware('auth:api');
+
+        $antrian_user = Antrian::where([
+            ['user_id', '=', Auth::id()],
+            ['status', '=', 0],
+            ['tanggal', Carbon::now()->format('Y-m-d')]
+        ])->first();
+        
+        $arr = ['A', 'B', 'C'];
+        $data = [];
+        if($antrian_user)
+        {
+            $data['nomor'] = $antrian_user->nomor;
+            $data['loket'] = $arr[$antrian_user->poli_id - 1];
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil Get Data User',
+            'data'    => $data
+        ], 200);
+    }
+
     public function insertAntrian(Request $request)
     {
         // Check if user or not
@@ -64,38 +109,57 @@ class AntrianController extends Controller
 
     }
 
-    public function next(Request $request) {
-    try {
-        $date = Carbon::now()->toDateTimeString();
-        $now = substr($date, 0, 10);
+    public function updateAntrian(Request $request) {
+        try {
+            // Check if user or not
+            $this->middleware('auth:api');
 
-        $loket = Antrian::select()
+            $date = Carbon::now()->toDateTimeString();
+            $now = substr($date, 0, 10);
+
+            $loket = Antrian::select()
+                ->where('tanggal', $now)
+                ->where('status', 0)
+                ->where('poli_id', $request->poli_id)
+                ->first();
+
+            $loket->status = 1;
+            $loket->save();
+
+            $nomor = Antrian::select('nomor')
             ->where('tanggal', $now)
             ->where('status', 0)
             ->where('poli_id', $request->poli_id)
             ->first();
 
-        $loket->status = 1;
-        $loket->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berubah',
+                'data' => $nomor->nomor,
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Antrian Habis',
+            ], 409);
+        }
+    }
 
-        $nomor = Antrian::select('nomor')
-        ->where('tanggal', $now)
-        ->where('status', 0)
-        ->where('poli_id', $request->poli_id)
-        ->first();
+    public function deleteAntrian(Request $request) {
+        // Check if user or not
+        $this->middleware('auth:api');
+
+        $antrian_user = Antrian::where([
+            ['user_id', '=', Auth::id()],
+            ['status', '=', 0],
+            ['tanggal', Carbon::now()->format('Y-m-d')]
+        ])->first()->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Berubah',
-            'data' => $nomor->nomor,
+            'message' => 'Data User Dihapus',
+            'data' => $antrian_user,
         ], 200);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Antrian Habis',
-        ], 409);
-    }
-        
     }
 }

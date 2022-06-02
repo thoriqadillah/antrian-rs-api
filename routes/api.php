@@ -31,5 +31,8 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::get('/get-poli', [PoliController::class, 'getPoli']);
 
 // Antrian
+Route::get('/get-antrian', [AntrianController::class, 'getAntrian']);
+Route::get('/get-antrian-user', [AntrianController::class, 'getAntrianUser']);
 Route::post('/insert-antrian', [AntrianController::class, 'insertAntrian']);
-Route::put('/next', [AntrianController::class, 'next'])->name('next_pasien');
+Route::put('/update-antrian', [AntrianController::class, 'updateAntrian'])->name('next_pasien');
+Route::delete('/delete-antrian', [AntrianController::class, 'deleteAntrian']);
