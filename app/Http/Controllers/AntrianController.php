@@ -98,7 +98,7 @@ class AntrianController extends Controller
                 'success' => true,
                 'message' => 'Berhasil Insert',
                 'data'    => $antrian
-            ], 200);
+            ], 201);
             
         } catch (\Exception $e) {
             return response()->json([
@@ -159,7 +159,6 @@ class AntrianController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data User Dihapus',
-            'data' => $antrian_user,
         ], 200);
     }
 }
