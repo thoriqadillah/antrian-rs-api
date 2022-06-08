@@ -26,6 +26,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
+Route::get('/user', [AuthController::class, 'getUser']);
 
 // Poli
 Route::get('/get-poli', [PoliController::class, 'getPoli']);
