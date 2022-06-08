@@ -31,6 +31,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        $cookie = cookie('jwt', $token, 60 * 24);
         return response()->json([
                 'status' => 'success',
                 'user' => $user,
@@ -38,7 +39,7 @@ class AuthController extends Controller
                     'token' => $token,
                     'type' => 'bearer',
                 ]
-            ]);
+            ])->withCookie($cookie);
 
     }
 
@@ -86,5 +87,9 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ]);
+    }
+
+    public function getUser() {
+        return Auth::user();
     }
 }
