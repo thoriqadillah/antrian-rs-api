@@ -15,25 +15,27 @@ class AntrianController extends Controller
 {
     public function getAntrian(Request $request) {
         $jumlahPolis = Poli::count();
+        $nomors = [];
         for($i = 1; $i <= $jumlahPolis; $i++)
         {
-            $nomor[] = Antrian::select('nomor')
+            $nomor = Antrian::select('nomor')
             ->where('tanggal', Carbon::now()->format('Y-m-d'))
             ->where('status', 0)
             ->where('poli_id', $i)
             ->orderBy('nomor', 'asc')
             ->first();
-            if(!$nomor) {
-                $nomor[] = Antrian::select('nomor')
+            if(empty($nomor)) {
+                $nomor = Antrian::select('nomor')
                 ->where('tanggal', Carbon::now()->format('Y-m-d'))
                 ->where('status', 1)
                 ->where('poli_id', $i)
                 ->orderBy('nomor', 'desc')
                 ->first();
             }
+            array_push($nomors, $nomor);
         }
         $data['polis'] = Poli::select('nama_poli')->get();
-        $data['nomor'] = $nomor;
+        $data['nomor'] = $nomors;
 
         return response()->json([
             'success' => true,
