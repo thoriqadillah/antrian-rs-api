@@ -23,6 +23,14 @@ class AntrianController extends Controller
             ->where('poli_id', $i)
             ->orderBy('nomor', 'asc')
             ->first();
+            if(!$nomor) {
+                $nomor[] = Antrian::select('nomor')
+                ->where('tanggal', Carbon::now()->format('Y-m-d'))
+                ->where('status', 1)
+                ->where('poli_id', $i)
+                ->orderBy('nomor', 'desc')
+                ->first();
+            }
         }
         $data['polis'] = Poli::select('nama_poli')->get();
         $data['nomor'] = $nomor;
