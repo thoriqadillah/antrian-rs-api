@@ -35,7 +35,7 @@ class AntrianController extends Controller
             array_push($nomors, $nomor);
         }
         $data['polis'] = Poli::select('nama_poli')->get();
-        $data['nomor'] = $nomors;
+        $data['nomors'] = $nomors;
 
         return response()->json([
             'success' => true,
